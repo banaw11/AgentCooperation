@@ -25,12 +25,48 @@ namespace AgentCooperation
             InitializeComponent();
             LoadAgents();
             AgentsGridView.ItemsSource = agents;
+            LoadSearchCriteria();
         }
 
+        private void LoadSearchCriteria()
+        {
+            int value = AgentsGridView.Columns.Count();
+
+            for (int i = 0; i < value; i++)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Text = AgentsGridView.Columns[i].Header.ToString();
+                item.Tag = (uint)i;
+                Criteria.Items.Add(item);
+            }
+
+            Criteria.SelectedIndex = 0;
+        }
         private void LoadAgents()
         {
             agents = SqliteDataAccess.LoadAgents();
         }
+
+        private void AddNewRecord(object sender, EventArgs e)
+        {
+
+        }
+        private void RemoveRecord(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RefreshView(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SearchData(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 
     public class Agent
@@ -42,5 +78,16 @@ namespace AgentCooperation
         public string Phone_No { get; set; }
         public string Country { get; set; }
 
+    }
+
+    public class ComboBoxItem
+    {
+        public string Text { get; set; }
+        public uint Tag { get; set; }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }

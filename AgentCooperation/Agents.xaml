@@ -32,13 +32,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button x:Name="Add" Grid.Column="0" Content="Add" Margin="10"/>
-            <Button x:Name="Remove" Grid.Column="1" Content="Remove" Margin="10"/>
-            <Button x:Name="Refresh" Grid.Column="2" Content="Refresh" Margin="10"/>
-            <ComboBox x:Name="Criteria" Grid.Column="3" Margin="20,20,5,20"/>
-            <TextBox x:Name="SearchText" Grid.Column="4" Margin="0,20,5,20"/>
-            <Button x:Name="Search" Grid.Column="5" Margin="0,20,5,20">
-                <Image/>
+            <Button x:Name="Add" Click="AddNewRecord" Grid.Column="0" Content="Add" Margin="10"/>
+            <Button x:Name="Remove" Click="RemoveRecord" Grid.Column="1" Content="Remove" Margin="10"/>
+            <Button x:Name="Refresh" Click="RefreshView" Grid.Column="2" Content="Refresh" Margin="10"/>
+            <ComboBox x:Name="Criteria" Grid.Column="3" Margin="20,20,5,20" VerticalAlignment="Center"/>
+            <TextBox x:Name="SearchText" Grid.Column="4" Margin="0,20,5,20" VerticalAlignment="Center"/>
+            <Button  x:Name="Search" Click="SearchData" Grid.Column="5" Margin="0,20,5,20">
+                <Image Margin="5" Source=".\PNG/search.png"/>
             </Button>
         </Grid>
 
