@@ -3,20 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace AgentCooperation
 {
     public class SqliteDataAccess
     {
         private static string Id = "Default";
-        private static IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString());
+        private static IDbConnection dbConnection;
         public static List<Agent> LoadAgents()
         {
-            using (dbConnection) 
+            using (DbConnection()) 
             {
                 var output = dbConnection.Query<Agent>("SELECT * From AGENTS", new DynamicParameters());
                 return output.ToList();
@@ -25,7 +27,7 @@ namespace AgentCooperation
 
         public static void AddAgent(Agent agent)
         {
-            using (dbConnection)
+            using (DbConnection())
             {
                 dbConnection.Execute
                     ("If NOT EXIST ( SELECT * From AGENTS" +
@@ -39,7 +41,7 @@ namespace AgentCooperation
 
         public static void RemoveAgent(Agent agent)
         {
-            using (dbConnection)
+            using (DbConnection())
             {
                 dbConnection.Execute
                     ("IF EXISTS (SELECT * FROM AGENTS" +
@@ -50,11 +52,16 @@ namespace AgentCooperation
             }
         }
 
-        public static List<Agent> SearchAgents(string condition, string value)
+        public static List<Agent> SearchAgents(int indexOfCondition, string value)
         {
-            using (dbConnection)
+            string condition, query;
+            using (DbConnection())
             {
-                var output = dbConnection.Query<Agent>(("SELECT * From AGENTS WHERE {0} = {1}", condition, value).ToString(), new DynamicParameters());
+                query = "SELECT name FROM pragma_table_info('AGENTS') WHERE cid = @Index";
+                var info = dbConnection.Query<string>(query, new { Index = indexOfCondition});
+                condition = info.ToList()[0];
+                query = "SELECT * From AGENTS WHERE "+condition+" = @Value";
+                var output = dbConnection.Query<Agent>(query, new {  Value = value });
                 return output.ToList();
             }
         }
@@ -62,6 +69,12 @@ namespace AgentCooperation
         private static string LoadConnectionString()
         {
             return ConfigurationManager.ConnectionStrings[Id].ConnectionString;
+        }
+
+        private static IDbConnection DbConnection()
+        {
+            dbConnection = new SQLiteConnection(LoadConnectionString());
+            return dbConnection;
         }
     }
 }

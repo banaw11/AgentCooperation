@@ -24,7 +24,7 @@ namespace AgentCooperation
         {
             InitializeComponent();
             LoadAgents();
-            AgentsGridView.ItemsSource = agents;
+            Refreshing();
             LoadSearchCriteria();
         }
 
@@ -36,7 +36,7 @@ namespace AgentCooperation
             {
                 ComboBoxItem item = new ComboBoxItem();
                 item.Text = AgentsGridView.Columns[i].Header.ToString();
-                item.Tag = (uint)i;
+                item.Tag = i;
                 Criteria.Items.Add(item);
             }
 
@@ -46,7 +46,10 @@ namespace AgentCooperation
         {
             agents = SqliteDataAccess.LoadAgents();
         }
-
+        private void Refreshing()
+        {
+            AgentsGridView.ItemsSource = agents;
+        }
         private void AddNewRecord(object sender, EventArgs e)
         {
 
@@ -58,12 +61,17 @@ namespace AgentCooperation
 
         private void RefreshView(object sender, EventArgs e)
         {
-
+            LoadAgents();
+            Refreshing();
+            SearchText.Text = null;
         }
 
         private void SearchData(object sender, EventArgs e)
         {
-
+            ComboBoxItem item = Criteria.SelectedItem as ComboBoxItem;
+            string valueOfSearch = SearchText.Text;
+            agents = SqliteDataAccess.SearchAgents(item.Tag,valueOfSearch);
+            Refreshing();
         }
 
 
@@ -83,7 +91,7 @@ namespace AgentCooperation
     public class ComboBoxItem
     {
         public string Text { get; set; }
-        public uint Tag { get; set; }
+        public int Tag { get; set; }
 
         public override string ToString()
         {
