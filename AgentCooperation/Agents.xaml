@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AgentCooperation"
         mc:Ignorable="d"
-        Title="Agents" Height="450" Width="800">
+        Title="Agents" Height="600" Width="1200">
     <Window.Resources>
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    <Grid Name="main" Margin="15,10,15,10">
+    <Grid Name="main" Margin="15,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>

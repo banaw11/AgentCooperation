@@ -42,17 +42,19 @@ namespace AgentCooperation
 
             Criteria.SelectedIndex = 0;
         }
-        private void LoadAgents()
+        public static void LoadAgents()
         {
             agents = SqliteDataAccess.LoadAgents();
+            
         }
-        private void Refreshing()
+        public void Refreshing()
         {
             AgentsGridView.ItemsSource = agents;
         }
         private void AddNewRecord(object sender, EventArgs e)
         {
-
+            AddRecordAgents addRecord = new AddRecordAgents();
+            addRecord.Show();
         }
         private void RemoveRecord(object sender, EventArgs e)
         {
@@ -68,10 +70,29 @@ namespace AgentCooperation
 
         private void SearchData(object sender, EventArgs e)
         {
-            ComboBoxItem item = Criteria.SelectedItem as ComboBoxItem;
-            string valueOfSearch = SearchText.Text;
-            agents = SqliteDataAccess.SearchAgents(item.Tag,valueOfSearch);
-            Refreshing();
+            bool search = true;
+            if(SearchText.Text == "")
+            {
+                string messageBoxText = "Searching field is empty. Continue searching data ?";
+                string caption = "Searching data";
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxImage image = MessageBoxImage.Question;
+                MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, image);
+
+                if (result == MessageBoxResult.No) search = false;
+            }
+            if (search)
+            {
+                ComboBoxItem item = Criteria.SelectedItem as ComboBoxItem;
+                string valueOfSearch = SearchText.Text;
+                agents = SqliteDataAccess.SearchAgents(item.Tag, valueOfSearch);
+                Refreshing();
+            }
+            else
+            {
+                Refreshing();
+            }
+            
         }
 
 

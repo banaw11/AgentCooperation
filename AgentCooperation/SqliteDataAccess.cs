@@ -7,7 +7,9 @@ using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace AgentCooperation
@@ -29,13 +31,22 @@ namespace AgentCooperation
         {
             using (DbConnection())
             {
-                dbConnection.Execute
+                agent.Agent_Code = NewAgentCode();
+                try
+                {
+                    dbConnection.Execute
                     ("If NOT EXIST ( SELECT * From AGENTS" +
-                                    "WHERE AGENT_CODE = @Agent_Code )" +
+                                    "WHERE AGENT_NAME = @Agent_Name )" +
                     "BEGIN" +
                         "INSERT INTO AGENTS (AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NUMBER, COUNTRY)" +
-                        "VALUES(@Agent_Code, @Agent_Name, @Working_Area, @Commision, @Phone_NO, @Country)"+
+                        "VALUES(@Agent_Code, @Agent_Name, @Working_Area, @Commision, @Phone_NO, @Country)" +
                     "END", agent);
+                }
+                catch(SQLiteException e)
+                {
+                    MessageBox.Show("Something went wrong. Record not added \n {0}", e.Message);
+                }
+                
             }
         }
 
@@ -75,6 +86,22 @@ namespace AgentCooperation
         {
             dbConnection = new SQLiteConnection(LoadConnectionString());
             return dbConnection;
+        }
+
+        private static string NewAgentCode()
+        {
+            string code;
+            using (DbConnection())
+            {
+                var lastID = dbConnection.Query<string>("SELECT MAX(AGENT_CODE) FROM AGENTS");
+                int id = int.Parse(lastID.ToList()[0].Trim('A'));
+                id++;
+                code = Regex.Replace(lastID.ToList()[0], @"[\d-]", string.Empty);
+                string idStr = id.ToString();
+                idStr.PadLeft(3, '0');
+                code += idStr;
+            }
+            return code;
         }
     }
 }
