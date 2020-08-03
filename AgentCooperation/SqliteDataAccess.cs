@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -41,6 +42,7 @@ namespace AgentCooperation
                         "INSERT INTO AGENTS (AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NUMBER, COUNTRY)" +
                         "VALUES(@Agent_Code, @Agent_Name, @Working_Area, @Commision, @Phone_NO, @Country)" +
                     "END", agent);
+                    
                 }
                 catch(SQLiteException e)
                 {

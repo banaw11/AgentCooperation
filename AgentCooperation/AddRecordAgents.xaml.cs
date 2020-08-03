@@ -42,7 +42,7 @@ namespace AgentCooperation
             {
                 try
                 {
-                    Agent agent = new Agent() { Agent_Name = TbName.Text, Working_Area = TbArea.Text, Commission = float.Parse(TbCommission.Text), Phone_No = TbPhone.Text, Country = TbCountry.Text };
+                    Agent agent = new Agent(TbName.Text, TbArea.Text, float.Parse(TbCommission.Text), TbPhone.Text, TbCountry.Text) ;
                     SqliteDataAccess.AddAgent(agent);
                 }
                 catch(FormatException)
@@ -65,7 +65,7 @@ namespace AgentCooperation
 
         private void CancelAdding(object sender, EventArgs e)
         {
-            Close();
+           // Close();
         }
     }
 }

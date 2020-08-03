@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,12 +23,28 @@ namespace AgentCooperation
     public partial class Agents : Window
     {
         private static List<Agent> agents;
+        public  List<Agent> AgentsList
+        {
+            get { return agents; }
+            set
+            {
+                agents = value;
+                OnPropertyChanged("AgentsList");
+            }
+        } 
         public Agents()
         {
             InitializeComponent();
             LoadAgents();
             Refreshing();
             LoadSearchCriteria();
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (propertyName == "AgentsList")
+                Refreshing();
+            
         }
 
         private void LoadSearchCriteria()
@@ -42,19 +61,20 @@ namespace AgentCooperation
 
             Criteria.SelectedIndex = 0;
         }
-        public static void LoadAgents()
+        public   void LoadAgents()
         {
-            agents = SqliteDataAccess.LoadAgents();
-            
+            AgentsList = SqliteDataAccess.LoadAgents();
+
         }
-        public void Refreshing()
+        public  void Refreshing()
         {
-            AgentsGridView.ItemsSource = agents;
+            AgentsGridView.ItemsSource = AgentsList;
         }
         private void AddNewRecord(object sender, EventArgs e)
         {
             AddRecordAgents addRecord = new AddRecordAgents();
             addRecord.Show();
+            
         }
         private void RemoveRecord(object sender, EventArgs e)
         {
@@ -64,7 +84,6 @@ namespace AgentCooperation
         private void RefreshView(object sender, EventArgs e)
         {
             LoadAgents();
-            Refreshing();
             SearchText.Text = null;
         }
 
@@ -85,8 +104,7 @@ namespace AgentCooperation
             {
                 ComboBoxItem item = Criteria.SelectedItem as ComboBoxItem;
                 string valueOfSearch = SearchText.Text;
-                agents = SqliteDataAccess.SearchAgents(item.Tag, valueOfSearch);
-                Refreshing();
+                AgentsList = SqliteDataAccess.SearchAgents(item.Tag, valueOfSearch);
             }
             else
             {
@@ -98,6 +116,7 @@ namespace AgentCooperation
 
     }
 
+
     public class Agent
     {
         public string Agent_Code { get; set; }
@@ -106,6 +125,20 @@ namespace AgentCooperation
         public float Commission { get; set; }
         public string Phone_No { get; set; }
         public string Country { get; set; }
+
+        public Agent()
+        {
+
+        }
+
+        public  Agent( string name, string area, float commission, string phone, string country)
+        {
+            Agent_Name = name;
+            Working_Area = area;
+            Commission = commission;
+            Phone_No = phone;
+            Country = country;
+        }
 
     }
 
