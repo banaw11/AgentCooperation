@@ -47,12 +47,8 @@ namespace AgentCooperation
                 }
                 catch(FormatException)
                 { 
-                    MessageBox.Show("Value in field 'COMMISSION' is not correct. Record not added");
+                    MessageBox.Show("Value in field 'COMMISSION' is not correct. Record not added","Error",MessageBoxButton.OK,MessageBoxImage.Error);
                     TbCommission.Text = null;
-                }
-                catch(Exception fe)
-                {
-                    MessageBox.Show("Something went wrong... Record not added \n {0}", fe.Message);
                 }
                 finally
                 {
@@ -65,7 +61,7 @@ namespace AgentCooperation
 
         private void CancelAdding(object sender, EventArgs e)
         {
-           // Close();
+            Close();
         }
     }
 }

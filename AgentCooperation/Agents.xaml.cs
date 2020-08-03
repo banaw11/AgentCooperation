@@ -22,8 +22,10 @@ namespace AgentCooperation
     /// </summary>
     public partial class Agents : Window
     {
+
+        public static DataGrid gridView;
         private static List<Agent> agents;
-        public  List<Agent> AgentsList
+        public static  List<Agent> AgentsList
         {
             get { return agents; }
             set
@@ -35,12 +37,13 @@ namespace AgentCooperation
         public Agents()
         {
             InitializeComponent();
+            gridView = AgentsGridView;
             LoadAgents();
             Refreshing();
             LoadSearchCriteria();
         }
 
-        private void OnPropertyChanged(string propertyName)
+        protected static void OnPropertyChanged(string propertyName)
         {
             if (propertyName == "AgentsList")
                 Refreshing();
@@ -61,14 +64,14 @@ namespace AgentCooperation
 
             Criteria.SelectedIndex = 0;
         }
-        public   void LoadAgents()
+        public void LoadAgents()
         {
             AgentsList = SqliteDataAccess.LoadAgents();
 
         }
-        public  void Refreshing()
+        public static  void Refreshing()
         {
-            AgentsGridView.ItemsSource = AgentsList;
+            gridView.ItemsSource = AgentsList;
         }
         private void AddNewRecord(object sender, EventArgs e)
         {
@@ -78,7 +81,22 @@ namespace AgentCooperation
         }
         private void RemoveRecord(object sender, EventArgs e)
         {
-
+            try
+            {
+                foreach (var item in gridView.SelectedItems.Cast<Agent>().ToList())
+                {
+                    SqliteDataAccess.RemoveAgent(item);
+                }
+            }
+            catch (Exception fe)
+            {
+                MessageBox.Show("Something went wrong. Record not deleted \n " + fe.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                LoadAgents();
+            }
+            
         }
 
         private void RefreshView(object sender, EventArgs e)

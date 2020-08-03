@@ -24,45 +24,54 @@ namespace AgentCooperation
             using (DbConnection()) 
             {
                 var output = dbConnection.Query<Agent>("SELECT * From AGENTS", new DynamicParameters());
+                
                 return output.ToList();
             }
         }
 
         public static void AddAgent(Agent agent)
         {
-            using (DbConnection())
+            try
             {
-                agent.Agent_Code = NewAgentCode();
-                try
+                using (DbConnection())
                 {
-                    dbConnection.Execute
-                    ("If NOT EXIST ( SELECT * From AGENTS" +
-                                    "WHERE AGENT_NAME = @Agent_Name )" +
-                    "BEGIN" +
-                        "INSERT INTO AGENTS (AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NUMBER, COUNTRY)" +
-                        "VALUES(@Agent_Code, @Agent_Name, @Working_Area, @Commision, @Phone_NO, @Country)" +
-                    "END", agent);
-                    
+                    agent.Agent_Code = NewAgentCode();
+                    DbConnection();
+                    string query = "INSERT OR IGNORE INTO AGENTS (AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NO, COUNTRY)" +
+                            "SELECT '"+agent.Agent_Code+"', '"+agent.Agent_Name+"', '"+agent.Working_Area+"', "+agent.Commission.ToString().Replace(',','.')+", '"+agent.Phone_No+"', '"+agent.Country+"'";
+                    dbConnection.Query(query, new DynamicParameters());
                 }
-                catch(SQLiteException e)
-                {
-                    MessageBox.Show("Something went wrong. Record not added \n {0}", e.Message);
-                }
-                
+            }
+            catch(SQLiteException e)
+            {
+                    MessageBox.Show(("Something went wrong. Record not added \n " + e.Message),"Error",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
+            finally
+            {
+                Agents.AgentsList = LoadAgents();
             }
         }
 
         public static void RemoveAgent(Agent agent)
         {
-            using (DbConnection())
+            try
             {
-                dbConnection.Execute
-                    ("IF EXISTS (SELECT * FROM AGENTS" +
-                                "WHERE AGENT_CODE = @Agent_Code)" +
-                     "BEGIN" +
-                        "DELETE From AGENTS WHERE AGENT_CODE = @Agent_Code" +
-                      "END", agent);
+                using (DbConnection())
+                {
+                    DbConnection();
+                    string query = "DELETE FROM AGENTS WHERE AGENT_CODE = @Agent_Code";
+                    dbConnection.Query(query, new { Agent_Code = agent.Agent_Code });
+                }
             }
+            catch(SQLiteException e)
+            {
+                MessageBox.Show(("Something went wrong. Record not deleted \n " + e.Message), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                Agents.AgentsList = LoadAgents();
+            }
+            
         }
 
         public static List<Agent> SearchAgents(int indexOfCondition, string value)
@@ -100,7 +109,8 @@ namespace AgentCooperation
                 id++;
                 code = Regex.Replace(lastID.ToList()[0], @"[\d-]", string.Empty);
                 string idStr = id.ToString();
-                idStr.PadLeft(3, '0');
+                idStr = idStr.PadLeft(3, '0');
+                MessageBox.Show(idStr);
                 code += idStr;
             }
             return code;

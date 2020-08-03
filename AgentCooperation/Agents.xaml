@@ -9,9 +9,12 @@
     <Window.Resources>
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="45" />
         </Style>
     </Window.Resources>
-    <Grid Name="main" Margin="15,10">
+    <Grid Name="main" Margin="15,10" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -32,17 +35,17 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button x:Name="Add" Click="AddNewRecord" Grid.Column="0" Content="Add" Margin="10"/>
-            <Button x:Name="Remove" Click="RemoveRecord" Grid.Column="1" Content="Remove" Margin="10"/>
-            <Button x:Name="Refresh" Click="RefreshView" Grid.Column="2" Content="Refresh" Margin="10"/>
-            <ComboBox x:Name="Criteria" Grid.Column="3" Margin="20,20,5,20" VerticalAlignment="Center"/>
-            <TextBox x:Name="SearchText" Grid.Column="4" Margin="0,20,5,20" VerticalAlignment="Center"/>
-            <Button  x:Name="Search" Click="SearchData" Grid.Column="5" Margin="0,20,5,20">
-                <Image Margin="5" Source=".\PNG/search.png"/>
+            <Button x:Name="Add" Click="AddNewRecord" Grid.Column="0" Content="Add" Margin="10" FontSize="15" FontWeight="Bold"/>
+            <Button x:Name="Remove" Click="RemoveRecord" Grid.Column="1" Content="Remove" Margin="10" FontSize="15" FontWeight="Bold"/>
+            <Button x:Name="Refresh" Click="RefreshView" Grid.Column="2" Content="Refresh" Margin="10" FontSize="15" FontWeight="Bold"/>
+            <ComboBox x:Name="Criteria" Grid.Column="3" Height="30" Margin="5,0" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" />
+            <TextBox x:Name="SearchText" Height="30" Grid.Column="4" Margin="0,20,5,20" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"/>
+            <Button  x:Name="Search" Height="45" Click="SearchData" Grid.Column="5" Margin="0,20,5,20">
+                <Image Margin="5"  Source=".\PNG/search.png"/>
             </Button>
         </Grid>
 
-        <DataGrid Name="AgentsGridView" Grid.Row="1" AutoGenerateColumns="False">
+        <DataGrid Name="AgentsGridView" Grid.Row="1" AutoGenerateColumns="False" >
             <DataGrid.Columns >
                 <DataGridTextColumn Width="1*" Header="CODE" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Binding="{Binding Agent_Code}"/>
                 <DataGridTextColumn Width="3*" Header="NAME" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Binding="{Binding Agent_Name}"/>
@@ -51,8 +54,15 @@
                 <DataGridTextColumn Width="3*" Header="PHONE NUMBER" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Binding="{Binding Phone_No}"/>
                 <DataGridTextColumn Width="2*" Header="COUNTRY" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Binding="{Binding Country}"/>
             </DataGrid.Columns>
-            
-            
+            <DataGrid.RowStyle >
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="25"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.RowStyle>
+
+
         </DataGrid>
 
     </Grid>
