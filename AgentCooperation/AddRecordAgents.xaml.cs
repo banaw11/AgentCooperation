@@ -68,11 +68,11 @@ namespace AgentCooperation
         {
             TextBox textBox = sender as TextBox;
             char value = (char)KeyInterop.VirtualKeyFromKey(e.Key);
-            if (!char.IsDigit(value) && textBox.Text.Contains(','))
+            if (!char.IsDigit(value) && textBox.Text.Contains(',') && !char.IsControl(value))
             {
                 e.Handled = true;
             }
-            else if (!char.IsDigit(value) && value != 188 && value !=190)
+            else if (!char.IsDigit(value) && value != 188 && value !=190 && !char.IsControl(value))
             {
                 e.Handled = true;
             }
@@ -97,14 +97,15 @@ namespace AgentCooperation
 
         private void CheckingCharInPhone(object sender, KeyEventArgs e)
         {
-            if(!char.IsDigit((char)KeyInterop.VirtualKeyFromKey(e.Key)))
+            if(!char.IsDigit((char)KeyInterop.VirtualKeyFromKey(e.Key)) && !char.IsControl((char)KeyInterop.VirtualKeyFromKey(e.Key)))
                 e.Handled = true;
 
             TextBox textBox = sender as TextBox;
             if (textBox.Text.Length == 3)
             {
                 textBox.Text += '-';
-                
+                textBox.Focus();
+                textBox.SelectionStart = textBox.Text.Length;
             } 
         }
     }
