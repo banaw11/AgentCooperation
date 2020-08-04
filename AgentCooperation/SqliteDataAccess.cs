@@ -88,6 +88,33 @@ namespace AgentCooperation
             }
         }
 
+        /* Acces to the Users Table in database */
+        public static bool CheckId(string id)
+        {
+            bool check = false;
+            using (DbConnection())
+            {
+                string query = "SELECT EXISTS (SELECT NULL FROM USERS WHERE AGENT_CODE = @Id)";
+                var output = dbConnection.Query(query, new { Id = id });
+                if (output.ToList()[0] == 1)
+                    check = true;
+            }
+            return check;
+        }
+
+        public static bool CheckPassword(string id, string pswd)
+        {
+            bool check = false;
+            using (DbConnection())
+            {
+                string query = "SELECT EXISTS (SELECT NULL FROM USERS WHERE AGENT_CODE = @Id AND PASSWORD = @Pswd)";
+                var output = dbConnection.Query(query, new { Id = id, Pswd = pswd });
+                if (output.ToList()[0] == 1)
+                    check = true;
+            }
+            return check;
+        }
+
         private static string LoadConnectionString()
         {
             return ConfigurationManager.ConnectionStrings[Id].ConnectionString;
