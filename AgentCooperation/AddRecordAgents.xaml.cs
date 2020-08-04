@@ -63,5 +63,49 @@ namespace AgentCooperation
         {
             Close();
         }
+
+        private void CheckingCharInCommision(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            char value = (char)KeyInterop.VirtualKeyFromKey(e.Key);
+            if (!char.IsDigit(value) && textBox.Text.Contains(','))
+            {
+                e.Handled = true;
+            }
+            else if (!char.IsDigit(value) && value != 188 && value !=190)
+            {
+                e.Handled = true;
+            }
+            
+        }
+
+        private void DotToComma(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            char value = (char)KeyInterop.VirtualKeyFromKey(e.Key);
+            if (value != 188 && value != 190)
+            {
+                e.Handled = true;
+            }
+            else if (value == 190)
+            {
+                textBox.Text = textBox.Text.Replace('.', ',');
+                textBox.Focus();
+                textBox.SelectionStart = textBox.Text.Length;
+            }
+        }
+
+        private void CheckingCharInPhone(object sender, KeyEventArgs e)
+        {
+            if(!char.IsDigit((char)KeyInterop.VirtualKeyFromKey(e.Key)))
+                e.Handled = true;
+
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text.Length == 3)
+            {
+                textBox.Text += '-';
+                
+            } 
+        }
     }
 }

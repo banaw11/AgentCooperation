@@ -29,11 +29,11 @@
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="2"  VerticalAlignment="Top" Margin="0,0,10,0">
             <Label Content="COMMISSION" FontSize="15" FontWeight="Bold" BorderThickness="0" HorizontalAlignment="Center"/>
-            <TextBox x:Name="TbCommission" Height="35" FontSize="12" VerticalAlignment="Center"/>
+            <TextBox x:Name="TbCommission" Height="35" FontSize="12" VerticalAlignment="Center" KeyDown="CheckingCharInCommision" KeyUp="DotToComma"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="3"  VerticalAlignment="Top" Margin="0,0,10,0">
             <Label Content="PHONE" FontSize="15" FontWeight="Bold" BorderThickness="0" HorizontalAlignment="Center"/>
-            <TextBox x:Name="TbPhone" Height="35" FontSize="12" VerticalAlignment="Center"/>
+            <TextBox x:Name="TbPhone" Height="35" FontSize="12" VerticalAlignment="Center" KeyDown="CheckingCharInPhone" MaxLength="12"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="4"  VerticalAlignment="Top" Margin="0,0,10,0">
             <Label Content="COUNTRY" FontSize="15" FontWeight="Bold" BorderThickness="0" HorizontalAlignment="Center"/>
