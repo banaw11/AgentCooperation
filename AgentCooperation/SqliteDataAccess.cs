@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
@@ -12,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using static AgentCooperation.MainWindow;
 
 namespace AgentCooperation
 {
@@ -94,9 +96,9 @@ namespace AgentCooperation
             bool check = false;
             using (DbConnection())
             {
-                string query = "SELECT EXISTS (SELECT NULL FROM USERS WHERE AGENT_CODE = @Id)";
-                var output = dbConnection.Query(query, new { Id = id });
-                if (output.ToList()[0] == 1)
+                string query = "SELECT 1 FROM USERS WHERE AGENT_CODE = @Id";
+                var output = dbConnection.Query<int>(query, new { Id = id });
+                if (output.ToList().Count() > 0)
                     check = true;
             }
             return check;
@@ -107,12 +109,58 @@ namespace AgentCooperation
             bool check = false;
             using (DbConnection())
             {
-                string query = "SELECT EXISTS (SELECT NULL FROM USERS WHERE AGENT_CODE = @Id AND PASSWORD = @Pswd)";
+                string query = "SELECT 1 FROM USERS WHERE AGENT_CODE = @Id AND PASSWORD = @Pswd";
                 var output = dbConnection.Query(query, new { Id = id, Pswd = pswd });
-                if (output.ToList()[0] == 1)
+                if (output.ToList().Count() > 0)
                     check = true;
             }
             return check;
+        }
+        public static string GetName(string id)
+        {
+            using (DbConnection())
+            {
+                string query = "SELECT AGENT_NAME FROM AGENTS WHERE AGENT_CODE = @Id";
+                var output = dbConnection.Query<string>(query, new { Id = id });
+                return output.ToList()[0];
+            }
+        }
+
+
+
+        public static List<Order> LoadOrders(string id)
+        {
+            List<Order> orders = new List<Order>();
+            using (SQLiteConnection sQLiteConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                //string query = "SELECT ORD_NUM, ORD_AMOUNT, ADVANCE_AMOUNT, ORD_DATE, CUST_CODE FROM ORDERS WHERE AGENT_CODE = @Agent";
+                //var output = dbConnection.Query<Order>(query, new { Agent = id });
+                //return output.ToList();
+                sQLiteConnection.Open();
+
+                SQLiteCommand cmd = new SQLiteCommand(sQLiteConnection);
+                cmd.CommandText = "SELECT ORD_NUM, ORD_AMOUNT, ADVANCE_AMOUNT, ORD_DATE, CUST_CODE, ORD_DESCRIPTION FROM ORDERS WHERE AGENT_CODE ='" + id+"'";
+               using(SQLiteDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
+                {
+                    while (reader.Read())
+                    {
+                        orders.Add(new Order(reader.GetDouble(0), reader.GetDouble(1), reader.GetDouble(2), DateTime.ParseExact(reader.GetString(3),"MM/dd/yyyy",null), reader.GetString(4), reader.GetString(5)));
+                    }
+                    
+                }
+
+            }
+            return orders;
+        }
+
+        public static List<Customer> LoadCustomers(string id)
+        {
+            using (DbConnection())
+            {
+                string query = "SELECT CUST_CODE, CUST_NAME, WORKING_AREA, CUST_COUNTRY, PHONE_NO FROM CUSTOMER WHERE AGENT_CODE = @Agent";
+                var output = dbConnection.Query<Customer>(query, new { Agent = id });
+                return output.ToList();
+            }
         }
 
         private static string LoadConnectionString()

@@ -32,7 +32,7 @@ namespace AgentCooperation
         {
             if (IdTxtB.Visibility == Visibility.Visible)
             {
-                id = IdTxtB.Text;
+                id = IdTxtB.Text.ToUpper();
                 if (!SqliteDataAccess.CheckId(id))
                 {
                     InformationTxtB.Text = msgNoUser;
@@ -44,6 +44,7 @@ namespace AgentCooperation
                     IdLbl.Visibility = Visibility.Hidden;
                     PasswordTxtB.Visibility = Visibility.Visible;
                     PswdLbl.Visibility = Visibility.Visible;
+                    InformationTxtB.Clear();
                 }
             }
             else if(PasswordTxtB.Visibility == Visibility.Visible)
@@ -56,6 +57,7 @@ namespace AgentCooperation
                 }
                 else
                 {
+                    MainWindow.agent = id;
                     Close();
                 }
             }
