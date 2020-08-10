@@ -37,6 +37,7 @@ namespace AgentCooperation
         public Agents()
         {
             InitializeComponent();
+            AgentNameLbl.Content = SqliteDataAccess.GetName(MainWindow.agent);
             gridView = AgentsGridView;
             LoadAgents();
             Refreshing();
@@ -131,7 +132,12 @@ namespace AgentCooperation
             
         }
 
-
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            Close();
+            mainWindow.Show();
+        }
     }
 
 

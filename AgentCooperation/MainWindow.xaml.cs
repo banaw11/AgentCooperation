@@ -21,15 +21,23 @@ namespace AgentCooperation
     {
         public static DataGrid gridView;
         public static string agent;
+        public static bool logged;
         public MainWindow()
         {
-            agent = null;
-            while(agent is null)
+            if (!logged)
             {
-                ShowLoginWindow();
-                if (LogInLoop() == MessageBoxResult.No)
-                    Environment.Exit(0);
+                agent = null;
+                while (agent is null)
+                {
+                    logged = false;
+                    ShowLoginWindow();
+                    if (agent is null)
+                    if (LogInLoop() == MessageBoxResult.No)
+                        Environment.Exit(0);
+                }
+                logged = true;
             }
+            
             InitializeComponent();
             LoadCriteria();
             LoggedInAgentName.Content = SqliteDataAccess.GetName(agent);

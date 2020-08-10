@@ -149,7 +149,6 @@ namespace AgentCooperation
             {
                 using (DbConnection())
                 {
-                    dbConnection.Open();
                     string query = "UPDATE USERS SET PASSWORD = @Pswd WHERE AGENT_CODE = @ID";
                     dbConnection.Query(query, new { Id = id, Pswd = password });
                 }
@@ -158,10 +157,7 @@ namespace AgentCooperation
             {
                 MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            finally
-            {
-                dbConnection.Close();
-            }
+            
             
         }
 

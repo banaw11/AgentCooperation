@@ -87,6 +87,7 @@ namespace AgentCooperation
                     {
                         InformationTxtB.Text = msgPswdReq;
                         PasswordTxtB.Clear();
+
                     }
                         
 
@@ -97,7 +98,7 @@ namespace AgentCooperation
 
         private bool PasswordRequirments(string password)
         {
-            return (Regex.IsMatch(password, "^(?=.*\d)(?=.*[a - z])(?=.*[A - Z])(?!.*\s).{ 4,8}$"));
+            return password.Length >7 && password.Any(char.IsDigit) && password.Any(char.IsUpper) && password.Any(char.IsLower) &&  Regex.IsMatch(password, @"[^A-Za-z0-9]");
         }
     }
 }
