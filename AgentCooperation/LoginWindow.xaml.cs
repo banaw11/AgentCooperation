@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +22,11 @@ namespace AgentCooperation
     {
         string id;
         string pswd;
+        bool checkPswd = true;
         string msgNoUser = "User doesn't exists";
         string msgPswdErr = "Password isn't correct";
+        string msgPswdSet = "Please set your password to access to the system";
+        string msgPswdReq = "Password doesn't meet the requirements ";
         public LoginWindow()
         {
             InitializeComponent();
@@ -44,23 +48,56 @@ namespace AgentCooperation
                     IdLbl.Visibility = Visibility.Hidden;
                     PasswordTxtB.Visibility = Visibility.Visible;
                     PswdLbl.Visibility = Visibility.Visible;
-                    InformationTxtB.Clear();
+                    if (!SqliteDataAccess.CheckIfPasswordSetted(id))
+                        InformationTxtB.Clear();
+                    else
+                    {
+                        InformationTxtB.Text = msgPswdSet;
+                        checkPswd = false;
+                    }
+                    
+                    
                 }
             }
             else if(PasswordTxtB.Visibility == Visibility.Visible)
             {
                 pswd = PasswordTxtB.Password;
-                if (!SqliteDataAccess.CheckPassword(id, pswd))
+                if (checkPswd)
                 {
-                    InformationTxtB.Text = msgPswdErr;
-                    PasswordTxtB.Clear();
+                    if (!SqliteDataAccess.CheckPassword(id, pswd))
+                    {
+                        InformationTxtB.Text = msgPswdErr;
+                        PasswordTxtB.Clear();
+                    }
+                    else
+                    {
+                        MainWindow.agent = id;
+                        Close();
+                    }
                 }
                 else
                 {
-                    MainWindow.agent = id;
-                    Close();
+                    if (PasswordRequirments(pswd))
+                    {
+                        SqliteDataAccess.SetPassword(id, pswd);
+                        MainWindow.agent = id;
+                        Close();
+                    }
+                    else
+                    {
+                        InformationTxtB.Text = msgPswdReq;
+                        PasswordTxtB.Clear();
+                    }
+                        
+
                 }
+               
             }
+        }
+
+        private bool PasswordRequirments(string password)
+        {
+            return (Regex.IsMatch(password, "^(?=.*\d)(?=.*[a - z])(?=.*[A - Z])(?!.*\s).{ 4,8}$"));
         }
     }
 }

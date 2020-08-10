@@ -23,12 +23,23 @@ namespace AgentCooperation
         public static string agent;
         public MainWindow()
         {
-            ShowLoginWindow();
+            agent = null;
+            while(agent is null)
+            {
+                ShowLoginWindow();
+                if (LogInLoop() == MessageBoxResult.No)
+                    Environment.Exit(0);
+            }
             InitializeComponent();
             LoadCriteria();
             LoggedInAgentName.Content = SqliteDataAccess.GetName(agent);
             gridView = ViewOfCriteria;
             LoadGridView();
+        }
+
+        private MessageBoxResult LogInLoop()
+        {
+            return  MessageBox.Show("Acces to the system is only for authenticated \n Are you want logg in now ? ", "Login required", MessageBoxButton.YesNo, MessageBoxImage.Information);   
         }
         private void LoadCriteria()
         {
@@ -58,7 +69,9 @@ namespace AgentCooperation
 
         private void AgentsBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            Agents agentsWindow = new Agents();
+            Close();
+            agentsWindow.Show();
         }
 
         private void OrdersBtn_Click(object sender, RoutedEventArgs e)
@@ -69,6 +82,13 @@ namespace AgentCooperation
         private void CustomersBtn_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+        private void LogOutBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            agent = null;
+            Close();
+            mainWindow.Show();
         }
 
         public class Order
@@ -124,6 +144,7 @@ namespace AgentCooperation
                 Phone_No = phone;
             }
         }
-            
+
+        
     }
 }

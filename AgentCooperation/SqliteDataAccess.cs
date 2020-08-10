@@ -42,6 +42,8 @@ namespace AgentCooperation
                     string query = "INSERT OR IGNORE INTO AGENTS (AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NO, COUNTRY)" +
                             "SELECT '"+agent.Agent_Code+"', '"+agent.Agent_Name+"', '"+agent.Working_Area+"', "+agent.Commission.ToString().Replace(',','.')+", '"+agent.Phone_No+"', '"+agent.Country+"'";
                     dbConnection.Query(query, new DynamicParameters());
+                    query = "INSERT OR IGNORE INTO USERS (AGENT_CODE, PASSWORD) SELECT '"+agent.Agent_Code+"',''";
+                    dbConnection.Query(query, new DynamicParameters());
                 }
             }
             catch(SQLiteException e)
@@ -51,6 +53,7 @@ namespace AgentCooperation
             finally
             {
                 Agents.AgentsList = LoadAgents();
+                
             }
         }
 
@@ -124,6 +127,42 @@ namespace AgentCooperation
                 var output = dbConnection.Query<string>(query, new { Id = id });
                 return output.ToList()[0];
             }
+        }
+
+        public static bool CheckIfPasswordSetted(string id)
+        {
+            bool check = false;
+            using (DbConnection())
+            {
+                string query = "SELECT 1 FROM USERS WHERE AGENT_CODE = @Id AND PASSWORD = ''";
+                var output = dbConnection.Query(query, new { Id = id });
+                if (output.ToList().Count() > 0)
+                    check = true;
+
+            }
+            return check;
+        }
+
+        public static void SetPassword(string id, string password)
+        {
+            try
+            {
+                using (DbConnection())
+                {
+                    dbConnection.Open();
+                    string query = "UPDATE USERS SET PASSWORD = @Pswd WHERE AGENT_CODE = @ID";
+                    dbConnection.Query(query, new { Id = id, Pswd = password });
+                }
+            }
+            catch (SQLiteException e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                dbConnection.Close();
+            }
+            
         }
 
 

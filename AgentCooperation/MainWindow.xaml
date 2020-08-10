@@ -26,7 +26,7 @@
             <Button x:Name="OrdersBtn" Grid.Column="1" Margin="0,5,10,30" Click="OrdersBtn_Click" Content="ORDERS" FontSize="15" FontWeight="Bold"/>
             <Button x:Name="CustomersBtn" Grid.Column="2" Margin="0,5,10,30" Click="CustomersBtn_Click" Content="CUSTOMERS" FontSize="15" FontWeight="Bold"/>
             <Label x:Name="LoggedInAgentName" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20" FontSize="20" FontWeight="Bold" />
-            <Button x:Name="LogOutBtn" Grid.Column="5"   Content="Log Out" FontSize="15" FontWeight="Bold" Margin="0,20,10,10"/>
+            <Button x:Name="LogOutBtn" Grid.Column="5" Click="LogOutBtn_Click"    Content="Log Out" FontSize="15" FontWeight="Bold" Margin="0,20,10,10"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

@@ -17,7 +17,7 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Grid.ColumnSpan="2" Text="Logging in to the AgentCooperation System" TextWrapping="WrapWithOverflow" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0"/>
+        <TextBox  Grid.Row="0" Grid.ColumnSpan="2" Text="Logging in to the AgentCooperation System" TextWrapping="WrapWithOverflow" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0"/>
         <Label Name="IdLbl" Grid.Row="1" Grid.Column="0" Content="ID :" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TextBox Name="IdTxtB" Grid.Row="1" Grid.Column="1" Margin="5,20"/>
         <Label Name="PswdLbl"  Grid.Row="1" Grid.Column="0" Content="Password :" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"/>
